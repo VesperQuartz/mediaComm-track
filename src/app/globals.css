@@ -1,0 +1,132 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.1884 0.0128 248.5103);
+
+  /* Original Design Colors */
+  --track-red: #e91e8c;
+  --track-dark-red: #1565c0;
+  --track-deep-red: #0d3b8e;
+  --track-light-red: #fce4f3;
+  --track-pale-red: #f8f9ff;
+  --track-amber: #e91e8c;
+  --track-green: #2e7d52;
+  --track-light-green: #c8f5df;
+  --track-blue: #1565c0;
+  --track-light-blue: #ddeeff;
+  --track-dark: #0d1b3e;
+  --track-mid: #3a4a6b;
+  --track-soft: #7a8bad;
+  --track-border: #d0dff5;
+  --track-white: #ffffff;
+  --track-bg: #f0f5ff;
+
+  --card: oklch(0.9784 0.0011 197.1387);
+  --card-foreground: oklch(0.1884 0.0128 248.5103);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.1884 0.0128 248.5103);
+  --primary: #e91e8c;
+  --primary-foreground: oklch(1 0 0);
+  --secondary: #1565c0;
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(0.9222 0.0013 286.3737);
+  --muted-foreground: oklch(0.1884 0.0128 248.5103);
+  --accent: oklch(0.9392 0.0166 250.8453);
+  --accent-foreground: oklch(0.6723 0.1606 244.9955);
+  --destructive: oklch(0.6188 0.2376 25.7658);
+  --destructive-foreground: oklch(1 0 0);
+  --border: #d0dff5;
+  --input: oklch(0.9809 0.0025 228.7836);
+  --ring: oklch(0.6818 0.1584 243.354);
+  --font-dm-sans: DM Sans, ui-sans-serif, sans-serif;
+  --font-playfair-display: Playfair Display, serif;
+  --radius: 0.75rem;
+  --spacing: 0.25rem;
+}
+
+.dark {
+  --background: oklch(0 0 0);
+  --foreground: oklch(0.9328 0.0025 228.7857);
+  /* Add dark mode variants if needed, for now focusing on light */
+}
+
+@theme inline {
+  --color-track-red: var(--track-red);
+  --color-track-dark-red: var(--track-dark-red);
+  --color-track-deep-red: var(--track-deep-red);
+  --color-track-light-red: var(--track-light-red);
+  --color-track-pale-red: var(--track-pale-red);
+  --color-track-amber: var(--track-amber);
+  --color-track-green: var(--track-green);
+  --color-track-light-green: var(--track-light-green);
+  --color-track-blue: var(--track-blue);
+  --color-track-light-blue: var(--track-light-blue);
+  --color-track-dark: var(--track-dark);
+  --color-track-mid: var(--track-mid);
+  --color-track-soft: var(--track-soft);
+  --color-track-border: var(--track-border);
+  --color-track-white: var(--track-white);
+  --color-track-bg: var(--track-bg);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-dm-sans);
+  --font-serif: var(--font-playfair-display);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --animate-accordion-collapse: accordion-collapse var(--tw-duration, 200ms)
+    ease-out;
+  --animate-accordion-expand: accordion-expand var(--tw-duration, 200ms)
+    ease-out;
+  @keyframes accordion-collapse {
+    from {
+      height: var(--accordion-panel-height, auto);
+    }
+    to {
+      height: 0;
+    }
+  }
+  @keyframes accordion-expand {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--accordion-panel-height, auto);
+    }
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-track-bg text-track-dark font-sans;
+  }
+}

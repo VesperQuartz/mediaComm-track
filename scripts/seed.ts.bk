@@ -1,0 +1,98 @@
+import { db } from "@/lib/database";
+import { members, tasks, dailyLogs } from "@/repo/schema/schema";
+import { members as mockMembers, initialTasks, initialLogs } from "@/lib/mock-data";
+
+async function main() {
+  console.log("Seeding database (SQLite/Turso)...");
+
+  try {
+    // 1. Seed Members
+    console.log("Inserting members...");
+    for (const member of mockMembers) {
+      await db.insert(members).values({
+        id: member.id,
+        name: member.name,
+        role: member.role,
+        dept: member.dept,
+        contact: member.contact,
+      }).onConflictDoUpdate({
+        target: members.id,
+        set: {
+          name: member.name,
+          role: member.role,
+          dept: member.dept,
+          contact: member.contact,
+        },
+      });
+    }
+
+    // 2. Seed Tasks
+    console.log("Inserting tasks...");
+    for (const task of initialTasks) {
+      await db.insert(tasks).values({
+        id: task.id,
+        name: task.name,
+        memberId: task.member,
+        priority: task.priority,
+        start: task.start,
+        deadline: task.deadline,
+        tat: task.tat ? parseInt(task.tat) : null,
+        pct: task.pct,
+        status: task.status,
+        desc: task.desc,
+        actual: task.actual,
+        lateReason: task.lateReason,
+        feedback: task.feedback,
+        quality: task.quality,
+      }).onConflictDoUpdate({
+        target: tasks.id,
+        set: {
+          name: task.name,
+          memberId: task.member,
+          priority: task.priority,
+          start: task.start,
+          deadline: task.deadline,
+          tat: task.tat ? parseInt(task.tat) : null,
+          pct: task.pct,
+          status: task.status,
+          desc: task.desc,
+          actual: task.actual,
+          lateReason: task.lateReason,
+          feedback: task.feedback,
+          quality: task.quality,
+        },
+      });
+    }
+
+    // 3. Seed Logs
+    console.log("Inserting logs...");
+    for (const log of initialLogs) {
+      await db.insert(dailyLogs).values({
+        id: log.id,
+        memberId: log.member,
+        date: log.date,
+        completed: log.completed,
+        progress: log.progress,
+        blockers: log.blockers,
+        hours: log.hours,
+      }).onConflictDoUpdate({
+        target: dailyLogs.id,
+        set: {
+          memberId: log.member,
+          date: log.date,
+          completed: log.completed,
+          progress: log.progress,
+          blockers: log.blockers,
+          hours: log.hours,
+        },
+      });
+    }
+
+    console.log("Seeding completed successfully!");
+  } catch (error) {
+    console.error("Error seeding database:", error);
+    process.exit(1);
+  }
+}
+
+main();
