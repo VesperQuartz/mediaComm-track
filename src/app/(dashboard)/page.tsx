@@ -943,15 +943,21 @@ export default function DashboardPage() {
   };
 
   const TasksSection = () => {
-    const [filterMember, setFilterMember] = useState<string>("all");
-    const [filterStatus, setFilterStatus] = useState<string>("all");
-    const [filterPriority, setFilterPriority] = useState<string>("all");
+    const membersx = useQuery(orpc.listMembers.queryOptions());
+    const [filterMember, setFilterMember] = useState<string>("All Members");
+    const [filterStatus, setFilterStatus] = useState<string>("All Statuses");
+    const [filterPriority, setFilterPriority] =
+      useState<string>("All Priorities");
 
     const filteredTasks = tasks.filter((t: Task) => {
-      const matchMember = filterMember === "all" || t.memberId === filterMember;
-      const matchStatus = filterStatus === "all" || t.status === filterStatus;
+      console.log("T is", t);
+      const matchMember =
+        filterMember === "All Members" ||
+        membersx.data?.find((m) => m.id === t.memberId)?.name === filterMember;
+      const matchStatus =
+        filterStatus === "All Statuses" || t.status === filterStatus;
       const matchPriority =
-        filterPriority === "all" || t.priority === filterPriority;
+        filterPriority === "All Priorities" || t.priority === filterPriority;
       return matchMember && matchStatus && matchPriority;
     });
 
@@ -993,15 +999,16 @@ export default function DashboardPage() {
             <div className="flex flex-wrap gap-3">
               <Select
                 value={filterMember} //@ts-ignore
-                onValueChange={setFilterMember}
+                onValueChange={(e) => setFilterMember(e)}
+                defaultValue="All Members"
               >
-                <SelectTrigger className="h-9 w-[180px] rounded-lg text-xs">
+                <SelectTrigger className="h-9 w-[180px] rounded-lg border-2 border-gray-400 text-xs focus:border-red-500">
                   <SelectValue placeholder="All Members" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Members</SelectItem>
-                  {members.map((m: Member) => (
-                    <SelectItem key={m.id} value={m.id}>
+                  <SelectItem value={filterMember}>All Members</SelectItem>
+                  {members?.map((m: Member) => (
+                    <SelectItem key={m.id} value={m.name}>
                       {m.name}
                     </SelectItem>
                   ))}
@@ -1012,11 +1019,11 @@ export default function DashboardPage() {
                 value={filterStatus} //@ts-ignore
                 onValueChange={setFilterStatus}
               >
-                <SelectTrigger className="h-9 w-[150px] rounded-lg text-xs">
+                <SelectTrigger className="h-9 w-[180px] rounded-lg border-2 border-gray-400 text-xs focus:border-red-500">
                   <SelectValue placeholder="All Statuses" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="All Statuses">All Statuses</SelectItem>
                   <SelectItem value="Not Started">Not Started</SelectItem>
                   <SelectItem value="In Progress">In Progress</SelectItem>
                   <SelectItem value="Completed">Completed</SelectItem>
@@ -1027,11 +1034,11 @@ export default function DashboardPage() {
                 value={filterPriority} //@ts-ignore
                 onValueChange={setFilterPriority}
               >
-                <SelectTrigger className="h-9 w-[150px] rounded-lg text-xs">
+                <SelectTrigger className="h-9 w-[180px] rounded-lg border-2 border-gray-400 text-xs focus:border-red-500">
                   <SelectValue placeholder="All Priorities" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Priorities</SelectItem>
+                <SelectContent className="">
+                  <SelectItem value="All Priorities">All Priorities</SelectItem>
                   <SelectItem value="High">High</SelectItem>
                   <SelectItem value="Medium">Medium</SelectItem>
                   <SelectItem value="Low">Low</SelectItem>
@@ -1497,10 +1504,17 @@ export default function DashboardPage() {
   );
 
   const MemberAnalysisSection = () => {
-    const [selectedMemberId, setSelectedMemberId] = useState<string>(
-      members[0]?.id || "",
+    const [selectedMemberName, setSelectedMemberName] = useState<string>(
+      "-- Choose a member --",
     );
-    const mTasks = tasks.filter((t: Task) => t.memberId === selectedMemberId);
+
+    // membersx.data?.find((m) => m.id === t.memberId)?.name === filterMember;
+    const membersx = useQuery(orpc.listMembers.queryOptions());
+    const mTasks = tasks.filter(
+      (t: Task) =>
+        membersx.data?.find((m) => m.id === t.memberId)?.name ===
+        selectedMemberName,
+    );
     const total = mTasks.length;
     const done = mTasks.filter((t: Task) => t.status === "Completed").length;
     const onTimeRate = total > 0 ? Math.round((done / total) * 100) : 0;
@@ -1530,19 +1544,22 @@ export default function DashboardPage() {
               Select Team Member
             </Label>
             <Select
-              value={selectedMemberId}
+              value={selectedMemberName}
               //@ts-ignore
-              onValueChange={setSelectedMemberId}
+              onValueChange={setSelectedMemberName}
             >
               <SelectTrigger
                 id="member-select"
-                className="h-10 w-[240px] rounded-lg"
+                className="h-10 w-60 rounded-lg border-2 border-gray-400 text-xs focus:border-red-500"
               >
-                <SelectValue />
+                <SelectValue placeholder="-- Choose a member --" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem key={1} value={"-- Choose a member --"}>
+                  -- Choose a member --
+                </SelectItem>
                 {members.map((m: Member) => (
-                  <SelectItem key={m.id} value={m.id}>
+                  <SelectItem key={m.id} value={m.name}>
                     {m.name}
                   </SelectItem>
                 ))}
@@ -1550,7 +1567,7 @@ export default function DashboardPage() {
             </Select>
           </CardContent>
         </Card>
-        {selectedMemberId && (
+        {selectedMemberName && (
           <div className="animate-in space-y-6 duration-500 slide-in-from-bottom-2">
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
               {[
@@ -1566,7 +1583,7 @@ export default function DashboardPage() {
                 {
                   label: "Log Entries",
                   value: logs.filter(
-                    (l: Log) => l.memberId === selectedMemberId,
+                    (l: Log) => l.memberId === selectedMemberName,
                   ).length,
                   color: "deep-red",
                 },
