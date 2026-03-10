@@ -27,6 +27,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   type ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
@@ -772,11 +774,11 @@ export default function DashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="mt-4 h-[200px] w-full">
-                <ChartContainer config={chartConfig}>
+              <div className="mt-4 h-[250px] w-full">
+                <ChartContainer config={chartConfig} className="aspect-auto h-full">
                   <BarChart
                     data={chartData}
-                    margin={{ top: 0, right: 0, left: -20, bottom: 0 }}
+                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
                   >
                     <XAxis
                       dataKey="name"
@@ -786,6 +788,7 @@ export default function DashboardPage() {
                     />
                     <YAxis fontSize={10} tickLine={false} axisLine={false} />
                     <ChartTooltip content={<ChartTooltipContent />} />
+                    <ChartLegend content={<ChartLegendContent className="text-[10px]" />} />
                     <Bar
                       dataKey="completed"
                       fill="var(--color-completed)"
@@ -803,20 +806,6 @@ export default function DashboardPage() {
                     />
                   </BarChart>
                 </ChartContainer>
-              </div>
-              <div className="mt-4 flex flex-wrap justify-center gap-4">
-                <div className="flex items-center gap-1.5 text-[10px] font-medium text-track-mid">
-                  <div className="size-2.5 rounded-[3px] bg-[#2E7D52]" />{" "}
-                  Completed
-                </div>
-                <div className="flex items-center gap-1.5 text-[10px] font-medium text-track-mid">
-                  <div className="size-2.5 rounded-[3px] bg-[#E91E8C]" /> In
-                  Progress
-                </div>
-                <div className="flex items-center gap-1.5 text-[10px] font-medium text-track-mid">
-                  <div className="size-2.5 rounded-[3px] bg-[#0D3B8E]" />{" "}
-                  Overdue
-                </div>
               </div>
             </CardContent>
           </Card>
