@@ -1,7 +1,9 @@
+import { Spinner } from "@/components/ui/spinner";
+
 export default function DashboardLoading() {
   return (
     <div className="flex min-h-[400px] items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-track-red"></div>
+      <Spinner className="text-track-red size-8" />
     </div>
   );
 }
