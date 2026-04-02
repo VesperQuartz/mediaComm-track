@@ -1,6 +1,5 @@
 import { Bell } from "lucide-react";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { NavTabs } from "@/components/dashboard/nav-tabs";
 import { TopBar } from "@/components/dashboard/top-bar";
@@ -14,7 +13,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-track-bg pb-12 relative">
+    <div className="relative min-h-screen bg-track-bg pb-12">
       <Suspense fallback={<DashboardLoading />}>
         <DashboardShell>{children}</DashboardShell>
       </Suspense>
@@ -27,29 +26,25 @@ async function DashboardShell({ children }: { children: React.ReactNode }) {
     headers: await headers(),
   });
 
-  if (!session) {
-    redirect("/login");
-  }
-
   const TARGET_EMAIL = "juliet.godwin@medicaidradiology.com.ng";
 
   return (
     <>
-      <TopBar user={session.user} />
+      <TopBar user={session?.user ?? "Anonymous"} />
       <NavTabs />
-      <main className="mx-auto max-w-[1280px] px-6 pt-8">{children}</main>
+      <main className="mx-auto max-w-7xl px-6 pt-8">{children}</main>
 
-      {session.user.email.toLowerCase() === TARGET_EMAIL.toLowerCase() && (
-        <div className="fixed bottom-6 left-6 right-6 sm:right-auto z-[60] sm:w-full sm:max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {session?.user.email.toLowerCase() === TARGET_EMAIL.toLowerCase() && (
+        <div className="fixed right-6 bottom-6 left-6 z-60 animate-in duration-500 fade-in slide-in-from-bottom-4 sm:right-auto sm:w-full sm:max-w-sm">
           <Alert
             variant="default"
-            className="bg-track-pale-red border-track-red/20 shadow-2xl rounded-2xl"
+            className="rounded-2xl border-track-red/20 bg-track-pale-red shadow-2xl"
           >
             <Bell className="size-4 text-track-red" aria-hidden="true" />
-            <AlertTitle className="text-track-dark-red font-serif font-bold">
+            <AlertTitle className="font-serif font-bold text-track-dark-red">
               Friendly Reminder
             </AlertTitle>
-            <AlertDescription className="text-track-mid font-medium">
+            <AlertDescription className="font-medium text-track-mid">
               Please remember to give Jimoh his Chips and Chicken
             </AlertDescription>
           </Alert>
