@@ -1,12 +1,13 @@
 import "../lib/orpc.server";
 import type { Metadata } from "next";
 import { DM_Sans, Playfair_Display } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "@/components/ui/sonner";
-import "./globals.css";
-import { ThemeProvider } from "next-themes";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { AsyncProvider } from "@/providers/async";
 import { LoadingProvider } from "@/providers/loader";
+import "./globals.css";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -43,18 +44,20 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <LoadingProvider>
-              <NuqsAdapter
-                defaultOptions={{
-                  clearOnDefault: true,
-                  limitUrlUpdates: {
-                    method: "debounce",
-                    timeMs: 50,
-                  },
-                  shallow: true,
-                }}
-              >
-                {children}
-              </NuqsAdapter>
+              <TooltipProvider>
+                <NuqsAdapter
+                  defaultOptions={{
+                    clearOnDefault: true,
+                    limitUrlUpdates: {
+                      method: "debounce",
+                      timeMs: 50,
+                    },
+                    shallow: true,
+                  }}
+                >
+                  {children}
+                </NuqsAdapter>
+              </TooltipProvider>
             </LoadingProvider>
           </ThemeProvider>
         </AsyncProvider>

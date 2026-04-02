@@ -1,9 +1,9 @@
 import { os } from "@orpc/server";
-import { taskSchema } from "../schema";
+import { desc, eq } from "drizzle-orm";
+import z from "zod";
 import { db } from "@/lib/database";
 import { tasks } from "@/repo/schema/schema";
-import { eq, desc } from "drizzle-orm";
-import z from "zod";
+import { taskSchema } from "../schema";
 
 export const listTasks = os
   .route({
@@ -14,11 +14,11 @@ export const listTasks = os
     return await db.select().from(tasks).orderBy(desc(tasks.createdAt));
   });
 
-export const upsertTask = os
-  .input(taskSchema)
-  .handler(async ({ input }) => {
-    const id = input.id || `t${Date.now()}`;
-    await db.insert(tasks).values({
+export const upsertTask = os.input(taskSchema).handler(async ({ input }) => {
+  const id = input.id || `t${Date.now()}`;
+  await db
+    .insert(tasks)
+    .values({
       id,
       name: input.name,
       memberId: input.memberId,
@@ -32,7 +32,8 @@ export const upsertTask = os
       lateReason: input.lateReason || null,
       feedback: input.feedback || null,
       quality: input.quality || null,
-    }).onConflictDoUpdate({
+    })
+    .onConflictDoUpdate({
       target: tasks.id,
       set: {
         name: input.name,
@@ -49,8 +50,8 @@ export const upsertTask = os
         quality: input.quality || null,
       },
     });
-    return { id };
-  });
+  return { id };
+});
 
 export const deleteTask = os
   .input(z.object({ id: z.string() }))

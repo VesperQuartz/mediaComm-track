@@ -1,8 +1,8 @@
 import { os } from "@orpc/server";
-import { dailyLogSchema } from "../schema";
+import { desc, eq } from "drizzle-orm";
 import { db } from "@/lib/database";
 import { dailyLogs } from "@/repo/schema/schema";
-import { eq, desc } from "drizzle-orm";
+import { dailyLogSchema } from "../schema";
 
 export const listLogs = os
   .route({
@@ -13,11 +13,11 @@ export const listLogs = os
     return await db.select().from(dailyLogs).orderBy(desc(dailyLogs.createdAt));
   });
 
-export const upsertLog = os
-  .input(dailyLogSchema)
-  .handler(async ({ input }) => {
-    const id = input.id || `l${Date.now()}`;
-    await db.insert(dailyLogs).values({
+export const upsertLog = os.input(dailyLogSchema).handler(async ({ input }) => {
+  const id = input.id || `l${Date.now()}`;
+  await db
+    .insert(dailyLogs)
+    .values({
       id,
       memberId: input.memberId,
       date: input.date,
@@ -25,7 +25,8 @@ export const upsertLog = os
       progress: input.progress || null,
       blockers: input.blockers || null,
       hours: input.hours || null,
-    }).onConflictDoUpdate({
+    })
+    .onConflictDoUpdate({
       target: dailyLogs.id,
       set: {
         memberId: input.memberId,
@@ -36,5 +37,5 @@ export const upsertLog = os
         hours: input.hours || null,
       },
     });
-    return { id };
-  });
+  return { id };
+});

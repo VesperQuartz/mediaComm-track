@@ -89,11 +89,6 @@ export const TopBar = ({ user }: { user: any }) => {
                 My Account
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer rounded-lg py-2.5 text-xs transition-colors focus:bg-track-pale-red focus:text-track-red">
-                <UserIcon className="mr-2 size-4" />
-                <span>Profile Settings</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => router.push("/change-password")}
                 className="cursor-pointer rounded-lg py-2.5 text-xs transition-colors focus:bg-track-pale-red focus:text-track-red"

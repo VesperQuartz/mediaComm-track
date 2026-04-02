@@ -4,10 +4,10 @@ import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({
   out: "./migrations",
-  schema: "./src/repo/schema/schema.ts",
+  schema: "./src/repo/schema",
   dialect: "turso",
   dbCredentials: {
-    url: env.DATABASE_URL!,
+    url: String(env.DATABASE_URL),
     authToken: env.AUTH_TOKEN,
   },
 });

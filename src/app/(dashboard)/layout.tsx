@@ -39,7 +39,7 @@ async function DashboardShell({ children }: { children: React.ReactNode }) {
       <NavTabs />
       <main className="mx-auto max-w-[1280px] px-6 pt-8">{children}</main>
 
-      {session.user.email === TARGET_EMAIL && (
+      {session.user.email.toLowerCase() === TARGET_EMAIL.toLowerCase() && (
         <div className="fixed bottom-6 left-6 right-6 sm:right-auto z-[60] sm:w-full sm:max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-500">
           <Alert
             variant="default"

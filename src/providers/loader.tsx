@@ -9,7 +9,7 @@ export const LoadingProvider = ({
   return (
     <ProgressProvider
       height="4px"
-      color="#fffd00"
+      color="#1da1f2"
       options={{ showSpinner: false }}
       shallowRouting
     >

@@ -2,12 +2,12 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { admin, bearer, openAPI } from "better-auth/plugins";
-import { MailServer } from "@/services/mail";
+import { env } from "@/env/server";
 import { db } from "./database";
-import { transporter } from "./mail";
 import { ac, adminRole, customRole, userRole } from "./permission";
 
 export const auth = betterAuth({
+  baseUrl: env.BASE_URL,
   rateLimit: {
     window: 10,
     max: 100,
@@ -16,23 +16,6 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 6,
-    requireEmailVerification: true,
-    autoSignIn: false,
-  },
-  emailVerification: {
-    sendOnSignUp: true,
-    autoSignInAfterVerification: true,
-    sendOnSignIn: true,
-    sendVerificationEmail: async ({ user, url }) => {
-      const mail = new MailServer(transporter);
-      await mail.sendVerificationEmail({
-        recipient: user.email,
-        tokenUrl: url,
-      });
-    },
-    afterEmailVerification: async (data) => {
-      console.log(data);
-    },
   },
   database: drizzleAdapter(db, {
     provider: "sqlite",
@@ -45,6 +28,9 @@ export const auth = betterAuth({
         required: false,
       },
     },
+  },
+  advanced: {
+    disableOriginCheck: true,
   },
   plugins: [
     nextCookies(),

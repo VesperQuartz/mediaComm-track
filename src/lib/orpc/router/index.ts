@@ -1,7 +1,7 @@
-import { createTodo, getTodo } from "./todo";
+import * as logs from "./logs";
 import * as members from "./members";
 import * as tasks from "./tasks";
-import * as logs from "./logs";
+import { createTodo, getTodo } from "./todo";
 
 export default {
   createTodo,

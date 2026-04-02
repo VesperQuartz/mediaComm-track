@@ -20,7 +20,9 @@ export const taskSchema = z.object({
   start: z.string().optional(),
   deadline: z.string().min(1, "Deadline is required"),
   pct: z.number().min(0).max(100).default(0),
-  status: z.enum(["Not Started", "In Progress", "Completed"]).default("Not Started"),
+  status: z
+    .enum(["Not Started", "In Progress", "Completed"])
+    .default("Not Started"),
   desc: z.string().optional(),
   actual: z.string().optional(),
   lateReason: z.string().optional(),

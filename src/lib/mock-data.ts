@@ -53,7 +53,7 @@ export const members = [
 const today = new Date();
 const fmt = (d: Date) => d.toISOString().split("T")[0];
 const addDays = (d: Date, n: number) => {
-  let x = new Date(d);
+  const x = new Date(d);
   x.setDate(x.getDate() + n);
   return x;
 };
