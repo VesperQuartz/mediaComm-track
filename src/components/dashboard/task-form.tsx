@@ -36,6 +36,9 @@ export const TaskForm = ({
         onSuccess();
         toast.success("Task saved");
       },
+      onError: (e) => {
+        toast.error(e.message);
+      },
     }),
   );
 
@@ -85,7 +88,7 @@ export const TaskForm = ({
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
                 placeholder="e.g. Design TEDx Event Flyer"
-                className="h-10 rounded-lg"
+                className="h-10 rounded-lg border border-blue-500"
                 required
               />
             )}
@@ -101,7 +104,7 @@ export const TaskForm = ({
                 value={field.state.value}
                 onValueChange={field.handleChange}
               >
-                <SelectTrigger className="h-10 rounded-lg">
+                <SelectTrigger className="h-10 rounded-lg border border-blue-500">
                   <SelectValue placeholder="Select member..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -125,7 +128,7 @@ export const TaskForm = ({
                 value={field.state.value}
                 onValueChange={(val) => field.handleChange(val as any)}
               >
-                <SelectTrigger className="h-10 rounded-lg">
+                <SelectTrigger className="h-10 rounded-lg border border-blue-500">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -148,7 +151,7 @@ export const TaskForm = ({
                 value={field.state.value}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
-                className="h-10 rounded-lg"
+                className="h-10 rounded-lg border border-blue-500"
                 required
               />
             )}
@@ -167,7 +170,7 @@ export const TaskForm = ({
                 value={field.state.value}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(Number(e.target.value))}
-                className="h-10 rounded-lg"
+                className="h-10 rounded-lg border border-blue-500"
               />
             )}
           </form.Field>
@@ -183,7 +186,7 @@ export const TaskForm = ({
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
                 placeholder="Brief task description..."
-                className="min-h-[80px] rounded-lg"
+                className="min-h-20 rounded-lg border border-blue-500"
               />
             )}
           </form.Field>

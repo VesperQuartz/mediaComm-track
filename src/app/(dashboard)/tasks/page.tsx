@@ -38,11 +38,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { authClient } from "@/lib/auth-client";
 import { orpc } from "@/lib/orpc";
 import { cn } from "@/lib/utils";
 
 export default function TasksPage() {
   const queryClient = useQueryClient();
+  const session = authClient.useSession();
 
   const { data: members = [], isLoading: isLoadingMembers } = useQuery(
     orpc.listMembers.queryOptions(),
@@ -67,6 +69,9 @@ export default function TasksPage() {
       onSuccess: () => {
         queryClient.invalidateQueries(orpc.listTasks.queryOptions());
         toast.success("Task deleted");
+      },
+      onError: (e) => {
+        toast.error(e.message);
       },
     }),
   );
@@ -132,15 +137,17 @@ export default function TasksPage() {
             Assign, monitor and track all team tasks
           </p>
         </div>
-        <Button
-          onClick={() => {
-            setEditingTask(null);
-            setIsTaskModalOpen(true);
-          }}
-          className="h-10 rounded-lg bg-track-red px-6 text-xs font-semibold text-white shadow-sm transition-all hover:bg-track-deep-red active:scale-95"
-        >
-          <Plus className="size-4" /> New Task
-        </Button>
+        {session.data && (
+          <Button
+            onClick={() => {
+              setEditingTask(null);
+              setIsTaskModalOpen(true);
+            }}
+            className="h-10 rounded-lg bg-track-red px-6 text-xs font-semibold text-white shadow-sm transition-all hover:bg-track-deep-red active:scale-95"
+          >
+            <Plus className="size-4" /> New Task
+          </Button>
+        )}
       </div>
 
       <Card className="rounded-2xl border-none shadow-sm">
@@ -330,17 +337,19 @@ export default function TasksPage() {
                       >
                         <Pencil className="size-3.5" />
                       </Button>
-                      <Button
-                        onClick={() => {
-                          if (confirm("Delete this task?"))
-                            deleteTaskMutation.mutate({ id: t.id });
-                        }}
-                        variant="ghost"
-                        size="icon"
-                        className="size-7 text-track-soft hover:text-track-red"
-                      >
-                        <Trash2 className="size-3.5" />
-                      </Button>
+                      {session.data && (
+                        <Button
+                          onClick={() => {
+                            if (confirm("Delete this task?"))
+                              deleteTaskMutation.mutate({ id: t.id });
+                          }}
+                          variant="ghost"
+                          size="icon"
+                          className="size-7 text-track-soft hover:text-track-red"
+                        >
+                          <Trash2 className="size-3.5" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
