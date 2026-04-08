@@ -38,11 +38,13 @@ import {
   PaginationItem,
 } from "@/components/ui/pagination";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { authClient } from "@/lib/auth-client";
 import { orpc } from "@/lib/orpc";
 import { cn } from "@/lib/utils";
 
 export default function DashboardPage() {
   const queryClient = useQueryClient();
+  const session = authClient.useSession();
 
   const { data: members = [], isLoading: isLoadingMembers } = useQuery(
     orpc.listMembers.queryOptions(),
@@ -159,7 +161,17 @@ export default function DashboardPage() {
           }}
           className="h-10 rounded-lg bg-track-red px-6 text-xs font-semibold text-white shadow-sm transition-all hover:bg-track-deep-red active:scale-95"
         >
-          <Plus className="size-4" /> New Task
+          {session.data && (
+            <Button
+              onClick={() => {
+                setEditingTask(null);
+                setIsTaskModalOpen(true);
+              }}
+              className="h-10 rounded-lg bg-track-red px-6 text-xs font-semibold text-white shadow-sm transition-all hover:bg-track-deep-red active:scale-95"
+            >
+              <Plus className="size-4" /> New Task
+            </Button>
+          )}
         </Button>
       </div>
 
