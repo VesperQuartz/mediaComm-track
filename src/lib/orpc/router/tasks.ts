@@ -34,8 +34,8 @@ export const upsertTask = base
       }
     }
     const id = input.id || `t${Date.now()}`;
+    console.log("id", id);
     try {
-      console.log("context", context);
       await db
         .insert(tasks)
         .values({
@@ -70,9 +70,11 @@ export const upsertTask = base
             quality: input.quality || null,
           },
         });
+      console.log("inserted task", id);
       return { id };
     } catch (error) {
       console.log("Error", error);
+      throw new Error(`Error: ${JSON.stringify(error)}`);
     }
   });
 
